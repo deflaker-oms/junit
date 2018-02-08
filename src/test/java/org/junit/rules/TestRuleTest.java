@@ -38,8 +38,6 @@ public class TestRuleTest {
                         wasRun = true;
                         base.evaluate();
                     }
-
-                    ;
                 };
             }
         };
@@ -110,8 +108,6 @@ public class TestRuleTest {
                         runCount++;
                         base.evaluate();
                     }
-
-                    ;
                 };
             }
         }
@@ -318,8 +314,6 @@ public class TestRuleTest {
                         wasRun = true;
                         base.evaluate();
                     }
-
-                    ;
                 };
             }
         };
@@ -397,8 +391,6 @@ public class TestRuleTest {
                         runCount++;
                         base.evaluate();
                     }
-
-                    ;
                 };
             }
         }
@@ -540,52 +532,34 @@ public class TestRuleTest {
         assertThat(WatchmanTest.watchedLog, containsString(String.format("succeeds(%s) success!", WatchmanTest.class.getName())));
     }
 
-    public static class MethodBeforesAndAfters {
-        private static String watchedLog;
+    public static class BeforesAndAftersAreEnclosedByRule {
+        private static StringBuilder log;
+
+        @Rule
+        public TestRule watcher = new LoggingTestWatcher(log);
 
         @Before
         public void before() {
-            watchedLog += "before ";
-        }
-
-        private TestRule watchman = new TestWatcher() {
-            @Override
-            protected void starting(Description d) {
-                watchedLog += "starting ";
-            }
-
-            @Override
-            protected void finished(Description d) {
-                watchedLog += "finished ";
-            }
-
-            @Override
-            protected void succeeded(Description d) {
-                watchedLog += "succeeded ";
-            }
-        };
-
-        @Rule
-        public TestRule getWatchman() {
-            return watchman;
+            log.append("before ");
         }
 
         @After
         public void after() {
-            watchedLog += "after ";
+            log.append("after ");
         }
 
         @Test
         public void succeeds() {
-            watchedLog += "test ";
+            log.append("test ");
         }
     }
 
     @Test
-    public void methodBeforesAndAfters() {
-        MethodBeforesAndAfters.watchedLog = "";
-        JUnitCore.runClasses(MethodBeforesAndAfters.class);
-        assertThat(MethodBeforesAndAfters.watchedLog, is("starting before test after succeeded finished "));
+    public void beforesAndAftersAreEnclosedByRule() {
+        BeforesAndAftersAreEnclosedByRule.log = new StringBuilder();
+        JUnitCore.runClasses(BeforesAndAftersAreEnclosedByRule.class);
+        assertEquals("starting before test after succeeded finished ",
+                BeforesAndAftersAreEnclosedByRule.log.toString());
     }
 
     public static class MethodWrongTypedField {
@@ -703,8 +677,6 @@ public class TestRuleTest {
                     public void evaluate() throws Throwable {
                         base.evaluate();
                     }
-
-                    ;
                 };
             }
         }
