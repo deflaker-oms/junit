@@ -125,6 +125,14 @@
     </dependencies>
 
     <build>
+        <extensions>
+			<extension>
+				<groupId>org.deflaker</groupId>
+				<artifactId>deflaker-maven-extension</artifactId>
+				<version>1.4</version>
+			</extension>
+		</extensions>
+        
         <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
